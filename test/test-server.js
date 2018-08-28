@@ -150,3 +150,85 @@ describe("Shopping List", function() {
     );
   });
 });
+
+describe('Recipe list',function(){
+
+before(function(){
+  return runServer();
+});
+
+after(function(){
+  return closeServer();
+});
+
+ it('should return recipes on Get',function(){
+   return (
+     chai.request(app)
+     .get("/recipes")
+     .then(function(res){
+        expect(res).to.have.status(200);
+        expect(res).to.be.json;
+        expect(res.body).to.be.a("array");
+
+        expect(res.body.length).to.be.greaterThan(0);
+        const expectedKeys=['id','name','ingredients'];
+        res.body.forEach(function(item){
+           expect(item).to.be.a('object');
+           expect(item).to.include.keys(expectedKeys);
+        });
+      })
+   )
+ });
+
+ it('should create recipes on Post', function(){
+   return(
+     chai.request(app)
+     .post("/recipes")
+     .send(newItem)
+     .then(function(res){
+          expect(res).to.have.status(201);
+          expect(res).to.be.json;
+          expect(res.body).to.be.a('object');
+          expect(res.body).to.include.keys('id','name','ingredients');
+          expect(res.body).to.not.equal(null);
+          expect(res.body).to.deep.equal(Object.assign(newItem,{id:res.body.id}));
+     })
+   )
+ })
+});
+
+it('should update recipes on Put',function(){
+
+   const updateData ={
+     name:"halwa",
+     ingredients:['1 tsp water', '2 tsp corn flour','3 tsp sugar']
+   };
+
+   return
+     chai.request(app)
+     .get('/recipes')
+     .then(function(res){
+       updateData.id = res.body[0].id;
+      return chai.request(app)    
+     .put(`/recipes/${updateData.id}`)
+     .send(updateData)
+    })
+    .then(function(res){
+      expect(res).to.have.status(200);
+      expect(res).to.be.json;
+      expect(res.body).to.be.a('object');
+      expect(res.body).to.deep.equal(Object.assign(newItem,{id:res.body.id}));
+  });
+ 
+  it('should delete recipes on Delete', function(){
+    return chai.request(app)
+    .get('/recipes')
+    .then(function(res){
+       return chai.request(app)
+       .delete(`/recipes/${res.body[0].id}`)
+  })
+  .then(function(res){
+     expect(res).to.have.status(200);
+  })
+});
+});
