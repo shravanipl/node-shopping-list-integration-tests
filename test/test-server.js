@@ -181,6 +181,10 @@ after(function(){
  });
 
  it('should create recipes on Post', function(){
+   const newItem= {
+       name:'halwa',
+       ingredients:['1/2 cup carrots', '1/4 cup khoa', '1/2 cup sugar']
+   };
    return(
      chai.request(app)
      .post("/recipes")
