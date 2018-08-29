@@ -1,2 +1,7 @@
 language: node_js
 node_js: node
+deploy:
+app:https://arcane-tundra-13216.herokuapp.com/
+  provider: heroku
+  api_key: ...
+  strategy: git
