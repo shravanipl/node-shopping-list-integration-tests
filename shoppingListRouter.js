@@ -5,7 +5,7 @@ const { ShoppingList } = require("./models");
 
 // we're going to add some items to ShoppingList
 // so there's some data to look at
-ShoppingList.create("beans", true);
+ShoppingList.create("potatoes", true);
 ShoppingList.create("tomatoes", false);
 ShoppingList.create("peppers", false);
 
